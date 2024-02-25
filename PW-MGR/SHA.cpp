@@ -1,12 +1,21 @@
 #include "SHA.h"
 
-void rotr(vector<int>& input, int n)
+bool createMessageBlock(string inputText)
 {
-    int dim = input.size();
-    for (int i = 0; i < dim; i++)
-    {
-        if (i + n < dim) swap(input[i], input[i + n]);
-        else swap(input[i], input[i + n - dim]);
-    }
-
+	bitset<8> temp;
+	bitset<512>res;
+	int counter = 511;
+	for(int i = 0; i < inputText.size(); i++)
+	{
+		temp = inputText[i];
+		for(int q = 7; q >= 0; q--)
+		{
+			res[counter] = temp[q];
+			counter--;
+		}
+	}
+	res.flip(counter);
+	cout << temp<<"\n\n";
+	cout << res;
+	return true;
 }
