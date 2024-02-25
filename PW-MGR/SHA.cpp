@@ -3,7 +3,7 @@
 bool createMessageBlock(string inputText)
 {
 	bitset<8> temp;
-	bitset<512>res;
+	bitset<512>res; // 55 CHAR MAX
 	int counter = 511;
 	for(int i = 0; i < inputText.size(); i++)
 	{

@@ -2,6 +2,6 @@
 
 int main() 
 {
-	createMessageBlock("ciao");
+	keyExpansion("nome", "sono il miglior programmatore del mondo");
 	return 0;
 }
