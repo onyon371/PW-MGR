@@ -1,8 +1,20 @@
 #pragma once
 #include "include.h"
 
-bitset<256> mainKeyConverter(string value);
+class Aes
+{
+private:
+	string inputKey;
 
-void firstFourKeyGenerator(bitset<32> dest[4], bitset<256> mainKey);
+	BYTE hexFullKey[4][8];
+	
+	void rotWord(BYTE W[4]);
 
-void keyExpansion(string userName, string passWord);
+	void subWord(BYTE W[4]);
+
+	void S_TABLE(BYTE& B);
+public:
+
+};
+
+

@@ -135,6 +135,7 @@
     <ClInclude Include="AES.h" />
     <ClInclude Include="include.h" />
     <ClInclude Include="SHA.h" />
+    <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
