@@ -1,5 +1,34 @@
 #include "AES.h"
 
+
+/*#include <iostream>
+using namespace std;
+#include <bitset>
+typedef bitset<8> BYTE;
+
+BYTE rc(BYTE i)
+{
+	unsigned char uno = 0x01;
+	unsigned char due = 0x02;
+	
+    if(i == 0x01) return 1;
+    BYTE temp = rc(i-uno);
+    if(temp < 0x80) return temp * due;
+    else return (due*temp) xor 0x1b;
+}
+01001000-
+00010000=
+
+
+int main()
+{
+    std::cout<<rc(0x01);
+	
+	
+    return 0;
+}*/
+
+
 void Aes::rotWord(BYTE W[4])
 {
 	BYTE temp = W[0];
