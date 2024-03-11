@@ -3,7 +3,7 @@
 
 class Aes
 {
-private:
+public:
 	string inputKey;
 
 	BYTE hexFullKey[4][8];
@@ -13,7 +13,9 @@ private:
 	void subWord(BYTE W[4]);
 
 	void S_TABLE(BYTE& B);
-public:
+
+	BYTE recursiveFunction(BYTE i);
+//public:
 
 };
 
