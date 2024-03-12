@@ -1,6 +1,49 @@
 #include "AES.h"
 
-BYTE Aes::recursiveFunction(BYTE i)
+
+keySchedulling::keySchedulling(string key)
+{
+	keySeparator(key);
+
+
+	BYTE terminanti[4] = { this->roundKey[i][0][8], this->roundKey[i][1][8], this->roundKey[i][2][8], this->roundKey[i][3][8]};
+	this->rotWord(terminanti);
+	this->subWord(terminanti);
+	BYTE rcRes = this->recursiveFunction(i);
+	for (int i = 0; i < 4; i++) terminanti[i] = terminanti[i] xor rcRes;
+
+
+	int index = 0;
+	for (int i = 0; i < 15; i++)
+	{
+		for (int q = 0; q < 8; q++)
+		{
+			for (int z = 0; z < 4; z++)
+			{
+				roundKey[i][z][q] = roundKey[i][z][q] xor terminanti[index];
+				index++;
+				terminanti[index] = roundKey[i][z][q];
+			}
+		}
+	}
+}
+
+void keySchedulling::keySeparator(string key)
+{
+	int index = 0;
+	string temp;
+	for(int i = 0; i < 4; i++)
+	{
+		for (int q = 0; q < 7; q++)
+		{
+			temp = key[index] + key[index];
+			this->Key[i][q] = stoi(temp, 0, 16);
+			index += 2;
+		}
+	}
+}
+
+BYTE keySchedulling::recursiveFunction(BYTE i)
 {
 	if (i == 0x01) return 1;
 	BYTE temp = recursiveFunction(i - 0x01);
@@ -8,7 +51,7 @@ BYTE Aes::recursiveFunction(BYTE i)
 	else return ((2 * temp) xor 0x11b);
 }
 
-void Aes::rotWord(BYTE W[4])
+void keySchedulling::rotWord(BYTE W[4])
 {
 	BYTE temp = W[0];
 	W[0] = W[4];
@@ -17,7 +60,7 @@ void Aes::rotWord(BYTE W[4])
 	W[4] = temp;
 }
 
-void Aes::subWord(BYTE W[4])
+void keySchedulling::subWord(BYTE W[4])
 {
 	S_TABLE(W[0]);
 	S_TABLE(W[1]);
@@ -27,7 +70,7 @@ void Aes::subWord(BYTE W[4])
 
 
 
-void Aes::S_TABLE(BYTE& B)
+void keySchedulling::S_TABLE(BYTE& B)
 {
 	if (B == 0x00) {B = 0x63; return;}		
 	if (B == 0x01) {B = 0x7C; return;}		
