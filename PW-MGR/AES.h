@@ -3,11 +3,10 @@
 
 class keySchedulling
 {
-	BYTE Key[4][8];
+private:
+	//BYTE Key[4][8];
 
-	BYTE roundKey[15][4][8];
-
-	keySchedulling(string key);
+	BYTE roundKey[15][8][4];
 
 protected:
 	//utils function
@@ -20,12 +19,9 @@ protected:
 	void S_TABLE(BYTE& B);
 
 	BYTE recursiveFunction(BYTE i);
+
+public:
+	void keyGenerator(string key);
+
+	void roundKeyShower();
 };
-
-class Aes : keySchedulling
-{
-
-
-};
-
-

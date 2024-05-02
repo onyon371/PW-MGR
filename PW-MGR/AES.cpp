@@ -1,29 +1,44 @@
 #include "AES.h"
 
-
-keySchedulling::keySchedulling(string key)
+void keySchedulling::keyGenerator(string key)
 {
 	keySeparator(key);
 
-
-	BYTE terminanti[4] = { this->roundKey[i][0][8], this->roundKey[i][1][8], this->roundKey[i][2][8], this->roundKey[i][3][8]};
-	this->rotWord(terminanti);
-	this->subWord(terminanti);
-	BYTE rcRes = this->recursiveFunction(i);
-	for (int i = 0; i < 4; i++) terminanti[i] = terminanti[i] xor rcRes;
-
-
-	int index = 0;
-	for (int i = 0; i < 15; i++)
+	for (int i = 1; i < 15; i++)
 	{
-		for (int q = 0; q < 8; q++)
+		BYTE terminanti[4] = { this->roundKey[i-1][8][0], this->roundKey[i-1][8][1], this->roundKey[i-1][8][2], this->roundKey[i-1][8][3] };
+		this->rotWord(terminanti);
+		this->subWord(terminanti);
+		BYTE rcRes = this->recursiveFunction(i);
+		for (int q = 0; q < 4; q++)
 		{
-			for (int z = 0; z < 4; z++)
+			terminanti[q] = terminanti[q] xor rcRes;
+			this->roundKey[i][0][q] = terminanti[q] xor this->roundKey[i - 1][0][q];
+		}
+
+		for(int q = 1; q < 8; q++)
+		{
+			for(int z = 0; z < 4; z++)
 			{
-				roundKey[i][z][q] = roundKey[i][z][q] xor terminanti[index];
-				index++;
-				terminanti[index] = roundKey[i][z][q];
+				this->roundKey[i][q][z] = this->roundKey[i][q-1][z] xor this->roundKey[i - 1][q][z];
 			}
+		}
+	}
+}
+
+void keySchedulling::roundKeyShower()
+{
+	for(int i = 0; i <15; i++)
+	{
+		cout << "\nROUND KEY N. " << to_string(i) << "\n\n";
+		for(int q = 0; q < 4; q++)
+		{
+			for(int z = 0; z < 8; z++)
+			{
+				printf("%X", this->roundKey[i][z][q]);
+				cout <<" ";
+			}
+			cout << "\n";
 		}
 	}
 }
@@ -31,14 +46,15 @@ keySchedulling::keySchedulling(string key)
 void keySchedulling::keySeparator(string key)
 {
 	int index = 0;
-	string temp;
+	char temp;
+	
 	for(int i = 0; i < 4; i++)
 	{
-		for (int q = 0; q < 7; q++)
+		for (int q = 0; q < 8; q++)
 		{
-			temp = key[index] + key[index];
-			this->Key[i][q] = stoi(temp, 0, 16);
-			index += 2;
+			temp = key[index];
+			this->roundKey[0][q][i] = uint8_t(temp);
+			index++;
 		}
 	}
 }

@@ -130,11 +130,13 @@
     <ClCompile Include="AES.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SHA.cpp" />
+    <ClCompile Include="TCP-Client.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AES.h" />
     <ClInclude Include="include.h" />
     <ClInclude Include="SHA.h" />
+    <ClInclude Include="TCP-Client.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
