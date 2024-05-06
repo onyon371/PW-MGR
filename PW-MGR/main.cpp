@@ -2,9 +2,8 @@
 
 int main() 
 {
-	keySchedulling key;
-	key.keyGenerator("ciao, sono il miglior programmat");
-	
-	key.roundKeyShower();
+	Aes aes;
+	aes.encodeText("ciao", "si");
+
 	return 0;
 }

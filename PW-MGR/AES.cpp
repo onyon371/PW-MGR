@@ -52,7 +52,8 @@ void keySchedulling::keySeparator(string key)
 	{
 		for (int q = 0; q < 8; q++)
 		{
-			temp = key[index];
+			if (index < key.size()) temp = key[index];
+			else temp = '0';
 			this->roundKey[0][q][i] = uint8_t(temp);
 			index++;
 		}
@@ -361,3 +362,124 @@ void keySchedulling::S_TABLE(BYTE& B)
 	if (B == 0xFF) {B = 0x16; return;}		
 }
 
+void Aes::stringToHex()
+{
+	int index = 0;
+	char temp;
+
+	for (int i = 0; i < 4; i++)
+	{
+		for (int q = 0; q < 8; q++)
+		{
+			if (index < this->plainText.size()) temp = this->plainText[index];
+			else temp = '0';
+			this->textArray[q][i] = uint8_t(temp);
+			index++;
+		}
+	}
+}
+
+void Aes::hexToString()
+{
+	for(int i = 0; i < 4; i++)
+	{
+		for(int q = 0; q < 8; q++)
+		{
+			this->encodedText[q + 8 * i] = this->textArray[q][i];
+		}
+	}
+}
+
+void Aes::textSubBytes()
+{
+	for(int i = 0; i < 8; i++)
+	{
+		for(int q = 0; q < 4; q++)
+		{
+			this->S_TABLE(this->textArray[i][q]);
+		}
+	}
+}
+
+void Aes::textShiftRows()
+{
+	//Secondo shift
+	BYTE temp[2];
+	for(int i = 7; i > 0; i--)
+	{
+		temp[0] = this->textArray[i - 1][1];
+		this->textArray[i - 1][1] = this->textArray[i][1];
+	}
+	this->textArray[7][1] = temp[0];
+
+	//Terzo shift
+	temp[0] = this->textArray[7][2];
+	temp[1] = this->textArray[6][2];
+	this->textArray[7][2] = this->textArray[1][2];
+	this->textArray[6][2] = this->textArray[0][2];
+	this->textArray[0][2] = this->textArray[2][2];
+	this->textArray[1][2] = this->textArray[3][2];
+	this->textArray[2][2] = this->textArray[4][2];
+	this->textArray[3][2] = this->textArray[5][2];
+	this->textArray[4][2] = temp[1];
+	this->textArray[5][2] = temp[0];
+
+	//Quarto shift
+	temp[0] = this->textArray[7][3];
+	for(int i = 7; i > 0; i--)
+	{
+		this->textArray[i][3] = this->textArray[i-1][3];
+	}
+	this->textArray[0][3] = temp[0];
+}
+
+void Aes::textMixColumns()
+{
+}
+
+void Aes::addRoundKey(int nKey)
+{
+	for(int i = 0; i < 8; i++)
+	{
+		for(int q = 0; q < 4; q++)
+		{
+			this->textArray[i][q] = this->textArray[i][q] xor this->roundKey[nKey][i][q];
+		}
+	}
+}
+
+void Aes::encodeText(string textToEncode, string key)
+{
+	this->plainText = textToEncode;
+	this->keyGenerator(key);
+	this->encodedText = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+	
+
+	this->stringToHex();
+	this->addRoundKey(0);
+	
+	for(int i = 1; i < 15; i++)
+	{
+		this->textSubBytes();
+		this->textShiftRows();
+		if(i!=14) this->textMixColumns();
+		this->addRoundKey(i);
+	}
+
+	this->hexToString();
+
+	cout << "Encoded text:\n";
+
+	for(int i = 0; i < 4; i++)
+	{
+		for(int q = 0; q < 8; q++)
+		{
+			cout << "Valore array/convertito: " << this->textArray[q][i] << " / " << this->encodedText[q + 8 * i] << " // ";
+			printf("%X", this->textArray[q][i]);
+			cout << " / ";
+			printf("%X", this->encodedText[q+8*i]);
+			cout << "\n";
+		}
+	}
+
+}

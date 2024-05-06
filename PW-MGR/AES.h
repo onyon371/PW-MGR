@@ -4,11 +4,11 @@
 class keySchedulling
 {
 private:
-	//BYTE Key[4][8];
-
-	BYTE roundKey[15][8][4];
+	
 
 protected:
+	BYTE roundKey[15][8][4]; //RENDERE PRIVATA
+
 	//utils function
 	void keySeparator(string key);
 
@@ -24,4 +24,28 @@ public:
 	void keyGenerator(string key);
 
 	void roundKeyShower();
+};
+
+class Aes: keySchedulling
+{
+private:
+	string plainText;
+	BYTE textArray[8][4];
+	string encodedText;
+
+	BYTE multiplicationMatrix[8][4] = { {02,01,01,03}, {03,02,01,01}, {01,03,02,01}, {01,01,03,02},{02,01,01,03}, {03,02,01,01}, {01,03,02,01}, {01,01,03,02} };
+
+	void stringToHex();
+
+	void hexToString();
+
+	void textSubBytes();
+
+	void textShiftRows();
+
+	void textMixColumns();
+
+	void addRoundKey(int nKey);
+public:
+	void encodeText(string textToEncode, string key);
 };
