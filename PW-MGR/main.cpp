@@ -2,8 +2,7 @@
 
 int main() 
 {
-	Aes aes;
-	aes.encodeText("ciao", "si");
+	tcpClient();
 
 	return 0;
 }

@@ -13,4 +13,5 @@ typedef uint8_t BYTE;
 #include "SHA.h"
 #include "AES.h"
 #include "TCP-Client.h"
-
+#include <WS2tcpip.h>
+#pragma comment(lib, "ws2_32.lib")

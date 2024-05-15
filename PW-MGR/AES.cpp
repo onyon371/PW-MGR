@@ -435,6 +435,47 @@ void Aes::textShiftRows()
 
 void Aes::textMixColumns()
 {
+	BYTE resultMatrix[8][4];
+
+	resultMatrix[0][0] = this->textArray[0][0];
+	resultMatrix[0][1] =
+	resultMatrix[0][2] =
+	resultMatrix[0][3] =
+
+	resultMatrix[1][0] = ;
+	resultMatrix[1][1] = ;
+	resultMatrix[1][2] = ;
+	resultMatrix[1][3] = ;
+
+	resultMatrix[2][0] = ;
+	resultMatrix[2][1] = ;
+	resultMatrix[2][2] = ;
+	resultMatrix[2][3] = ;
+
+	resultMatrix[3][0] = ;
+	resultMatrix[3][1] = ;
+	resultMatrix[3][2] = ;
+	resultMatrix[3][3] = ;
+
+	resultMatrix[4][0] = ;
+	resultMatrix[4][1] = ;
+	resultMatrix[4][2] = ;
+	resultMatrix[4][3] = ;
+
+	resultMatrix[5][0] = ;
+	resultMatrix[5][1] = ;
+	resultMatrix[5][2] = ;
+	resultMatrix[5][3] = ;
+
+	resultMatrix[6][0] = ;
+	resultMatrix[6][1] = ;
+	resultMatrix[6][2] = ;
+	resultMatrix[6][3] = ;
+
+	resultMatrix[7][0] = ;
+	resultMatrix[7][1] = ;
+	resultMatrix[7][2] = ;
+	resultMatrix[7][3] = ;
 }
 
 void Aes::addRoundKey(int nKey)
