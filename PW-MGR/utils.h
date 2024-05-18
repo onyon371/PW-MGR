@@ -1,5 +1,6 @@
 #pragma once
 /*
+https://github.com/System-Glitch/SHA256
 bitset<256> mainKeyConverter(string value)
 {
 	bitset<8> temp;
