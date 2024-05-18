@@ -1,69 +1,72 @@
 #include "TCP-Client.h"
 
-void tcpClient()
+void initWinSock()
 {
-	string ipAddress = "127.0.0.1";			
-	int port = 54000;						
-
-	//WinSock
 	WSAData data;
 	WORD ver = MAKEWORD(2, 2);
-	int wsResult = WSAStartup(ver, &data);
-	if (wsResult != 0)
+	
+	if (WSAStartup(ver, &data) != 0)
 	{
-		cerr << "Can't start Winsock, Err #" << wsResult << endl;
+		cerr << "ERROR::INIT_WINSOCK# " << wsResult << "\n";
 		return;
 	}
+}
 
-	//socket
-	SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
-	if (sock == INVALID_SOCKET)
+void createSocket()
+{
+	sock = socket(AF_INET, SOCK_STREAM, 0);
+	if(sock < 0)
 	{
-		cerr << "Can't create socket, Err #" << WSAGetLastError() << endl;
-		WSACleanup();
+		cerr << "ERROR::CREATE_SOCKET #" << WSAGetLastError() << "\n";
+		return
+	}
+}
+
+void getServerInfo()
+{
+	host = gethostbyname(szHost);
+	if(host == nullptr)
+	{
+		cerr << "ERROR::GET_SERVER_INFO\n";
 		return;
 	}
+}
 
-	sockaddr_in hint;
-	hint.sin_family = AF_INET;
-	hint.sin_port = htons(port);
-	inet_pton(AF_INET, ipAddress.c_str(), &hint.sin_addr);
+void defineServerInfo()
+{
+	sin.sin_port = htons(PORT);
+	sin.sin_family = AF_INET;
+	inet_pton(AF_INET, ipAddress.c_str(), &sin.sin_addr);
+}
 
-	//server
-	int connResult = connect(sock, (sockaddr*)&hint, sizeof(hint));
-	if (connResult == SOCKET_ERROR)
+void connectToServer()
+{
+	if (connect(sock, (sockaddr*)&hint, sizeof(hint)) != 0)
 	{
-		cerr << "Can't connect to server, Err #" << WSAGetLastError() << endl;
+		cerr << "ERROR::DEFINE_SERVER_INFO#" << WSAGetLastError() << "\n";
 		closesocket(sock);
 		WSACleanup();
 		return;
 	}
+}
 
-
-	char buf[4096];
-	string userInput;
-
-	do
-	{
-		cout << "> ";
-		getline(cin, userInput);
-
-		if (userInput.size() > 0)
-		{
-			int sendResult = send(sock, userInput.c_str(), userInput.size() + 1, 0);
-			if (sendResult != SOCKET_ERROR)
-			{
-				ZeroMemory(buf, 4096);
-				int bytesReceived = recv(sock, buf, 4096, 0);
-				if (bytesReceived > 0)
-				{
-					cout << "SERVER> " << string(buf, 0, bytesReceived) << endl;
-				}
-			}
-		}
-
-	} while (userInput.size() > 0);
+void receiveData()
+{
+	char szBuffer[4096];
+	char szTemp[4096];
+	while(recv(sock, szTemp, 4096, 0))
+		strcat(szBuffer, szTemp);
 
 	closesocket(sock);
-	WSACleanup();
+}
+
+void sendData(string data)
+{
+	if(!send(sock, data, strlen(data), 0))
+	{
+		cerr << "ERROR::SEND_DATA#\n";
+		closesocket(sock);
+		WSACleanup();
+		return;
+	}
 }
