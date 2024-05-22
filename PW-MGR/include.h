@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include "WinSock2.h"
+#include <Ws2tcpip.h>
 
 #include <stdlib.h>
 #include <Windows.h>

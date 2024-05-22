@@ -1,17 +1,7 @@
 #include "SHA.h"
 
 SHA256::SHA256(): m_blocklen(0), m_bitlen(0) {
-	/*array<uint32_t, 64> X = {
-
-		
-		,,,,
-		,,,,
-		,,,,
-		,,,,
-		,,,,
-		
-	};
-	K = X;*/
+	
 
 	K[0] = 0x428a2f98;
 	K[1] = 0x71374491;

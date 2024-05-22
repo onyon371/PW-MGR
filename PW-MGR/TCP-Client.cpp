@@ -1,83 +1,82 @@
 #include "TCP-Client.h"
 
-void TCP::initWinSock()
+string sendData(string messageToSend)
 {
-	WSAData data;
-	WORD ver = MAKEWORD(2, 2);
-	
-	if (WSAStartup(ver, &data) != 0)
-	{
-		cerr << "ERROR::INIT_WINSOCK#\n";
-		return;
-	}
-}
+	std::string messageReceived;
+	const int DEFAULT_BUFLEN = 256;
 
-void TCP::createSocket()
-{
-	sock = socket(AF_INET, SOCK_STREAM, 0);
-	if(sock < 0)
-	{
-		cerr << "ERROR::CREATE_SOCKET #" << WSAGetLastError() << "\n";
+	WSADATA wsaData;
+	int iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+	if (iResult != NO_ERROR) {
+		std::cout << "WSAStartup Failed with error: " << iResult << std::endl;
+		return "";
+	}
+
+	SOCKET ConnectSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (ConnectSocket == INVALID_SOCKET) {
+		std::cout << "Error at socket(): " << WSAGetLastError() << std::endl;
 		WSACleanup();
-		return;
+		return "";
 	}
-}
 
-/*void TCP::getServerInfo()
-{
-	*host = gethostbyname(ipAddress);
-	if(host == nullptr)
-	{
-		cerr << "ERROR::GET_SERVER_INFO\n";
+	sockaddr_in addrServer;
+	addrServer.sin_family = AF_INET;
+	inet_pton(AF_INET, "127.0.0.1", &addrServer.sin_addr.s_addr);
+
+	addrServer.sin_port = htons(6666);
+	memset(&(addrServer.sin_zero), '\0', 8);
+
+	std::cout << "Connecting..." << std::endl;
+	iResult = connect(ConnectSocket, (SOCKADDR*)&addrServer, sizeof(addrServer));
+	if (iResult == SOCKET_ERROR) {
+		closesocket(ConnectSocket);
+		std::cout << "Unable to connect to server: " << WSAGetLastError() << std::endl;
 		WSACleanup();
-		return;
+		return "";
 	}
-}*/
 
-void TCP::defineServerInfo()
-{
-	sin.sin_port = htons(port);
-	sin.sin_family = AF_INET;
-	//inet_pton(AF_INET, ipAddress.c_str(), &sin.sin_addr);
-	memcpy(&sin.sin_addr.S_un.S_addr, host->h_addr_list[0], sizeof(sin.sin_addr.S_un.S_addr));
-}
-
-void TCP::connectToServer()
-{
-	if (connect(sock, (const sockaddr*)&sin, sizeof(sin)) != 0)
+	char messageSended[DEFAULT_BUFLEN] = { 0 };
+	for(int i = 0; i < messageToSend.size(); i++)
 	{
-		cerr << "ERROR::DEFINE_SERVER_INFO#" << WSAGetLastError() << "\n";
-		closesocket(sock);
-		WSACleanup();
-		return;
+		messageSended[i] = messageToSend[i];
 	}
-}
 
-void TCP::receiveData()
-{
-	createSocket();
-	defineServerInfo();
-	connectToServer();
+	const char* sendbuf = messageSended;
+	char recvbuf[DEFAULT_BUFLEN];
+	int recvbuflen = DEFAULT_BUFLEN;
 
-	char szBuffer[4096];
-	char szTemp[4096];
-	while(recv(sock, szTemp, 4096, 0))
-		strcat(szBuffer, szTemp);
-
-	closesocket(sock);
-}
-
-void TCP::sendData(char data[4096])
-{
-	createSocket();
-	defineServerInfo();
-	connectToServer();
-
-	if(!send(sock, data, 4096, 0))
-	{
-		cerr << "ERROR::SEND_DATA#\n";
-		closesocket(sock);
+	iResult = send(ConnectSocket, sendbuf, (int)strlen(sendbuf), 0);
+	if (iResult == SOCKET_ERROR) {
+		std::cout << "Send failed with error: " << WSAGetLastError() << std::endl;
+		closesocket(ConnectSocket);
 		WSACleanup();
-		return;
+		return "";
 	}
+
+	do {
+
+		iResult = recv(ConnectSocket, recvbuf, recvbuflen, 0);
+		if (iResult > 0) {
+
+			
+			for (int i = 0; i < iResult; i++) messageReceived += recvbuf[i];
+		}
+		else if (iResult == 0)
+			std::cout << "Connection closed\n" << std::endl;
+		else
+			printf("recv failed with error: %d\n", WSAGetLastError());
+
+	} while (iResult > 0);
+
+	iResult = shutdown(ConnectSocket, SD_SEND);
+	if (iResult == SOCKET_ERROR) {
+		printf("shutdown failed with error: %d\n", WSAGetLastError());
+		closesocket(ConnectSocket);
+		WSACleanup();
+		return "";
+	}
+
+	closesocket(ConnectSocket);
+	WSACleanup();
+	return messageReceived;
 }

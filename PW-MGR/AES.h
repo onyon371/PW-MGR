@@ -47,3 +47,11 @@ private:
 public:
 	void encodeText(string textToEncode, string key);
 };
+
+class InverseAes: keySchedulling
+{
+private:
+
+public:
+
+};
