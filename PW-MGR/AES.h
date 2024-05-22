@@ -33,8 +33,6 @@ private:
 	BYTE textArray[8][4];
 	string encodedText;
 
-	BYTE multiplicationMatrix[4][8] = { {02,01,01,03,03,02,01,01}, {01,03,02,01,01,01,03,02},{02,01,01,03,03,02,01,01}, {01,03,02,01,01,01,03,02} };
-
 	void stringToHex();
 
 	void hexToString();

@@ -1,18 +1,31 @@
+#pragma once
 #include "include.h"
 
-static int port = 54000;
-static string = "127.0.0.1";
+class TCP
+{
+private:
+	int port;
+	string ipAddress;
 
-static SOCKET sock;
+	SOCKET sock;
 
-static HOSTENT *host;
+	HOSTENT* host;
 
-static sockaddr_in sin;
+	sockaddr_in sin;
 
-void initWinSock();
-void createSocket();
-void getServerInfo();
-void defineServerInfo();
-void connectToServer();
-void receiveData();
-void sendData(string data);
+	void initWinSock();
+	void createSocket();
+	//void getServerInfo();
+	void defineServerInfo();
+	void connectToServer();
+
+public:
+	TCP() 
+	{
+		port = 54000;
+		ipAddress = "127.0.0.1";
+		initWinSock();
+	};
+	void receiveData();
+	void sendData(char data[4096]);
+};

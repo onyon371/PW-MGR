@@ -2,7 +2,7 @@
 
 int main() 
 {
-	tcpClient();
-
+	
+	system("pause");
 	return 0;
 }

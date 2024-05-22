@@ -435,47 +435,27 @@ void Aes::textShiftRows()
 
 void Aes::textMixColumns()
 {
-	BYTE resultMatrix[8][4];
+	for (int z = 0; z < 8; z++)
+	{
+		BYTE multiplicationMatrix[4][4] = { {0x02,0x03,0x01,0x01}, {0x01,0x02,0x03,0x01}, {0x01,0x01,0x02,0x03}, {0x03,0x01,0x01,0x02} };
+		BYTE resultMatrix[4] = { 0x00,0x00,0x00,0x00 };
+		BYTE temp;
 
-	resultMatrix[0][0] = this->textArray[0][0];
-	resultMatrix[0][1] =
-	resultMatrix[0][2] =
-	resultMatrix[0][3] =
-
-	resultMatrix[1][0] = ;
-	resultMatrix[1][1] = ;
-	resultMatrix[1][2] = ;
-	resultMatrix[1][3] = ;
-
-	resultMatrix[2][0] = ;
-	resultMatrix[2][1] = ;
-	resultMatrix[2][2] = ;
-	resultMatrix[2][3] = ;
-
-	resultMatrix[3][0] = ;
-	resultMatrix[3][1] = ;
-	resultMatrix[3][2] = ;
-	resultMatrix[3][3] = ;
-
-	resultMatrix[4][0] = ;
-	resultMatrix[4][1] = ;
-	resultMatrix[4][2] = ;
-	resultMatrix[4][3] = ;
-
-	resultMatrix[5][0] = ;
-	resultMatrix[5][1] = ;
-	resultMatrix[5][2] = ;
-	resultMatrix[5][3] = ;
-
-	resultMatrix[6][0] = ;
-	resultMatrix[6][1] = ;
-	resultMatrix[6][2] = ;
-	resultMatrix[6][3] = ;
-
-	resultMatrix[7][0] = ;
-	resultMatrix[7][1] = ;
-	resultMatrix[7][2] = ;
-	resultMatrix[7][3] = ;
+		for (int i = 0; i < 4; i++)
+		{
+			for (int q = 0; q < 4; q++)
+			{
+				if (multiplicationMatrix[i][q] == 0x01) temp = this->textArray[z][q];
+				if (multiplicationMatrix[i][q] == 0x02) temp = this->textArray[z][q] * 0x02;
+				if (multiplicationMatrix[i][q] == 0x03) temp = (this->textArray[z][q] * 0x02) xor this->textArray[z][q];
+				resultMatrix[i] = resultMatrix[i] xor temp;
+			}
+		}
+		for (int i = 0; i < 4; i++)
+		{
+			this->textArray[z][i] = resultMatrix[i];
+		}
+	}
 }
 
 void Aes::addRoundKey(int nKey)
