@@ -26,7 +26,7 @@ string sendData(string messageToSend)
 	addrServer.sin_port = htons(6666);
 	memset(&(addrServer.sin_zero), '\0', 8);
 
-	std::cout << "Connecting..." << std::endl;
+	std::cout << "Connecting to the server..." << std::endl;
 	iResult = connect(ConnectSocket, (SOCKADDR*)&addrServer, sizeof(addrServer));
 	if (iResult == SOCKET_ERROR) {
 		closesocket(ConnectSocket);
