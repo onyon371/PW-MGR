@@ -816,7 +816,24 @@ void InverseAes::INVERSE_SUB_BYTES()
 
 void InverseAes::INVERSE_MIX_COLUMNS()
 {
+	for (int z = 0; z < 8; z++)
+	{
+		BYTE multiplicationMatrix[4][4] = { {0x0E,0x0B,0x0D,0x09}, {0x09,0x0E,0x0B,0x0D}, {0x0D,0x09,0x0E,0x0B}, {0x0B,0x0D,0x09,0x0E} };
+		BYTE resultMatrix[4] = { 0x00,0x00,0x00,0x00 };
+		BYTE temp;
 
+		for (int i = 0; i < 4; i++)
+		{
+			for (int q = 0; q < 4; q++)
+			{
+				resultMatrix[i] = resultMatrix[i] xor this->TEXT_MATRIX[z][q];;
+			}
+		}
+		for (int i = 0; i < 4; i++)
+		{
+			this->TEXT_MATRIX[z][i] = resultMatrix[i];
+		}
+	}
 }
 
 void InverseAes::INVERSE_ADD_ROUND_KEY(int nKey)
@@ -852,6 +869,8 @@ void InverseAes::DECODE_TEXT(string textToDecode, string key, string& res)
 		this->INVERSE_SHIFT_ROWS();
 		this->INVERSE_SUB_BYTES();
 		this->INVERSE_ADD_ROUND_KEY(i);
+		//if(i!=0) this->INVERSE_MIX_COLUMNS();
 	}
+
 	this->HEX_TO_STRING(this->TEXT_MATRIX, res);
 }

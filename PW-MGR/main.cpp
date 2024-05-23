@@ -25,6 +25,11 @@ void getDataFromAnswer(string incomingText, string& passwordDecrypted, string& i
 
 int main() 
 {
+	string text = "hello";
+	string pw = "pw";
+	aes.encodeText(text, pw, text);
+	inverseAes.DECODE_TEXT(text, pw, text);
+	cout << text<<"\n";
 	vector<string> cryptedPW;
 	vector<string> cryptedInfo;
 	string username, password, LOGINDATA;

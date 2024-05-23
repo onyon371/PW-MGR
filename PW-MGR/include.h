@@ -33,6 +33,5 @@ typedef uint8_t BYTE;
 #include <sstream>
 #include <iomanip>
 
-#include <string>
 #include <array>
 #include <cstdint>
