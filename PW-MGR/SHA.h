@@ -10,6 +10,7 @@ public:
 	array<uint8_t, 32> digest();
 
 	static std::string toString(const std::array<uint8_t, 32> & digest);
+	void textString_to_SHA(string& input);
 
 private:
 	uint8_t  m_data[64];

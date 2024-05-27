@@ -233,3 +233,17 @@ std::string SHA256::toString(const std::array<uint8_t, 32> & digest)
 
 	return s.str();
 }
+
+void SHA256::textString_to_SHA(string& input)
+{
+	int index = 0;
+	char temp;
+	std::array<uint8_t, 32> textArray;
+	for (int i = 0; i < input.size(); i++)
+	{
+		temp = input[i];
+		textArray[i] = uint8_t(temp);
+		index++;
+	}
+	input = this->toString(textArray);
+}
